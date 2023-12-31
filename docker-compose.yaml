@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+    solr8_master:
+        image: 'solr:8.11.2'
+        ports:
+            - "127.0.0.1:8983:8983"
+        environment:
+            - SOLR_HOME=/var/solr/data
+        volumes:
+            - type: bind
+              source: ./solr_files_master/
+              target: /var/solr/data/
+
+    solr8_slave:
+        image: 'solr:8.11.2'
+        ports:
+            - "127.0.0.1:8984:8983"
+        environment:
+            - SOLR_HOME=/var/solr/data
+            - SOLR_OPTS=-Dsolr.disable.shardsWhitelist=true
+        volumes:
+            - type: bind
+              source: ./solr_files_slave/
+              target: /var/solr/data/

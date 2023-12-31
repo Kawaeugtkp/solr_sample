@@ -1,0 +1,131 @@
+fieldTypes:
+    - name: string
+      class: solr.StrField
+    - name: int
+      class: solr.TrieIntField
+    - name: geo
+      class: solr.LatLonPointSpatialField
+    - name: pdate
+      class: solr.DatePointField
+    - name: bool
+      class: solr.BoolField
+    - name: text_ja
+      class: solr.TextField
+      analyzer:
+        charFilters:
+            - class: solr.PatternReplaceCharFilterFactory
+              pattern: \([^)]+\)
+              replacement: ''
+            - class: solr.MappingCharFilterFactory
+              mapping: han_numbers.txt
+        tokenizer:
+            class: solr.JapaneseTokenizerFactory
+            mode: normal
+        filters:
+            - class: solr.CJKWidthFilterFactory
+fields:
+    - name: id
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: caption
+      indexed: true
+      stored: true
+      multiValued: false
+      type: text_ja
+    - name: timestamp
+      indexed: true
+      stored: true
+      multiValued: false
+      type: pdate
+    - name: ownerUID
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: type
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: isRootOpinion
+      indexed: true
+      stored: true
+      multiValued: false
+      type: bool
+    - name: votes
+      indexed: true
+      stored: true
+      multiValued: false
+      type: int
+    - name: topic
+      indexed: true
+      stored: true
+      multiValued: false
+      type: text_ja
+    - name: description
+      indexed: true
+      stored: true
+      multiValued: false
+      type: text_ja
+    - name: topicID
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: setID
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: category
+      indexed: true
+      stored: true
+      multiValued: false
+      type: int
+    - name: basedOpinionId
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: postImageUrl
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: link
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: name
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: ruby
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: address
+      indexed: true
+      stored: true
+      multiValued: false
+      type: string
+    - name: coord
+      indexed: true
+      stored: true
+      multiValued: false
+      type: geo
+    - name: tags
+      indexed: true
+      stored: true
+      multiValued: true
+      type: text_ja
+    - name: reviews
+      indexed: true
+      stored: true
+      multiValued: false
+      type: int

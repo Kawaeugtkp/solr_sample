@@ -1,0 +1,28 @@
+{
+    "add-field-type": {
+        "name": "text_ja",
+        "class": "solr.TextField",
+        "analyzer": {
+            "charFilters": [
+                {
+                    "class": "solr.PatternReplaceCharFilterFactory",
+                    "pattern": "\\([^)]+\\)",
+                    "replacement": ""
+                },
+                {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "han_numbers.txt"
+                }
+            ],
+            "tokenizer": {
+                "class": "solr.JapaneseTokenizerFactory",
+                "mode": "normal"
+            },
+            "filters": [
+                {
+                    "class": "solr.CJKWidthFilterFactory"
+                }
+            ]
+        }
+    }
+}

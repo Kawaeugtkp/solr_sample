@@ -1,0 +1,11 @@
+requestHandlers:
+- name: /search
+  class: solr.SearchHandler
+  defaults:
+    defType: edismax
+    echoParams: explicit
+    indent: 'on'
+    wt: json
+    q.alt: '*:*'
+    q.op: AND
+    qf: name ruby description tags
