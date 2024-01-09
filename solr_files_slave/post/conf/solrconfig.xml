@@ -265,10 +265,11 @@
   </requestHandler>
 
   <requestHandler name="/replication" class="solr.ReplicationHandler">
-    <lst name="master">
-      <str name="confFiles">managed-schema,configoverlay.json,solrconfig-slave.xml:solrconfig.xml,han_numbers.txt</str>
+    <lst name="slave">
+      <str name="masterUrl">http://solr8_master:8984/solr/post/replication</str>
+      <str name="httpConnTimeout">5000</str>
+      <str name="httpReadTimeout">10000</str>
     </lst>
-    <str name="commitReserveDuration">00:00:10</str>
   </requestHandler>
 
   <!-- Update Processors

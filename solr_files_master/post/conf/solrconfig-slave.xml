@@ -266,7 +266,7 @@
 
   <requestHandler name="/replication" class="solr.ReplicationHandler">
     <lst name="slave">
-      <str name="masterUrl">http://solr8_master:8983/solr/spot_sample/replication</str>
+      <str name="masterUrl">http://solr8_master:8983/solr/post/replication</str>
       <str name="httpConnTimeout">5000</str>
       <str name="httpReadTimeout">10000</str>
     </lst>
