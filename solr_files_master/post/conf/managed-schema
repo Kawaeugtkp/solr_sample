@@ -37,9 +37,44 @@
       <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\([^)]+\)" replacement=""/>
       <charFilter class="solr.MappingCharFilterFactory" mapping="han_numbers.txt"/>
       <tokenizer class="solr.JapaneseTokenizerFactory" mode="normal"/>
-      <filter class="solr.CJKWidthFilterFactory"/>
+      <!-- <filter class="solr.CJKWidthFilterFactory"/> -->
+      <filter class="solr.LowerCaseFilterFactory"/> <!-- アルファベットの小文字統一 -->
     </analyzer>
   </fieldType>
+  <fieldType name="ja_tri" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.NGramTokenizerFactory" minGramSize="3" maxGramSize="3"/>
+      <filter class="solr.CJKWidthFilterFactory"/>
+      <filter class="org.apache.lucene.analysis.icu.ICUTransformFilterFactory" id="Katakana-Hiragana"/>
+      <filter class="solr.JapaneseKatakanaStemFilterFactory" minimumLength="4"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.NGramTokenizerFactory" minGramSize="3" maxGramSize="3"/>
+      <filter class="solr.CJKWidthFilterFactory"/>
+      <filter class="org.apache.lucene.analysis.icu.ICUTransformFilterFactory" id="Katakana-Hiragana"/>
+      <filter class="solr.JapaneseKatakanaStemFilterFactory" minimumLength="4"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="ja_common" class="solr.TextField">
+    <analyzer>
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\([^)]+\)" replacement=""/>
+      <charFilter class="solr.MappingCharFilterFactory" mapping="han_numbers.txt"/>
+      <tokenizer class="solr.JapaneseTokenizerFactory" mode="normal"/>
+      <filter class="solr.CJKWidthFilterFactory"/> <!-- 半角全角の揺れを統一 -->
+      <filter class="solr.LowerCaseFilterFactory"/> <!-- アルファベットの小文字統一 -->
+      <!-- <filter class="solr.ICUFoldingFilterFactory"/> ひらがなとカタカナを同一視でき、他の言語でも同様にUnicodeの文字折りたたみを実行してくれる（らしい？） -->
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_lemmatized" class="solr.TextField" positionIncrementGap="100">
+  <analyzer>
+    <tokenizer class="solr.StandardTokenizerFactory"/> <!-- テキストを単語にトークン化 -->
+    <filter class="solr.LowerCaseFilterFactory"/>
+    <filter class="solr.PorterStemFilterFactory"/> <!-- 単語を原型にする -->
+    <filter class="solr.LowerCaseFilterFactory"/> <!-- アルファベットの小文字統一 -->
+  </analyzer>
+</fieldType>
   <fieldType name="tfloat" class="solr.TrieFloatField" positionIncrementGap="0" docValues="true" precisionStep="8"/>
   <fieldType name="tfloats" class="solr.TrieFloatField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="8"/>
   <fieldType name="tint" class="solr.TrieIntField" positionIncrementGap="0" docValues="true" precisionStep="8"/>
@@ -51,23 +86,41 @@
   <field name="_version_" type="long" indexed="true" docValues="true"/>
   <field name="address" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="coord" type="geo" multiValued="false" indexed="true" stored="true"/>
-  <field name="id" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="id" type="long" multiValued="false" indexed="true" stored="true"/>
   <field name="name" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="reviews" type="int" multiValued="false" indexed="true" stored="true"/>
   <field name="ruby" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="tags" type="text_ja" multiValued="true" indexed="true" stored="true"/>
   <field name="caption" type="text_ja" multiValued="false" indexed="true" stored="true"/>
+  <field name="caption_tri" type="ja_tri" multiValued="false" indexed="true" stored="true"/>
+  <field name="caption_common" type="ja_common" multiValued="false" indexed="true" stored="true"/>
+  <field name="caption_lemmatized" type="text_lemmatized" multiValued="false" indexed="true" stored="true"/>
   <field name="timestamp" type="pdate" multiValued="false" indexed="true" stored="true"/>
-  <field name="ownerUID" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="owner_id" type="long" multiValued="false" indexed="true" stored="true"/>
   <field name="type" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="isRootOpinion" type="boolean" multiValued="false" indexed="true" stored="true"/>
+  <field name="is_root_opinion" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="votes" type="int" multiValued="false" indexed="true" stored="true"/>
   <field name="topic" type="text_ja" multiValued="false" indexed="true" stored="true"/>
+  <field name="topic_tri" type="ja_tri" multiValued="false" indexed="true" stored="true"/>
+  <field name="topic_common" type="ja_common" multiValued="false" indexed="true" stored="true"/>
+  <field name="topic_lemmatized" type="text_lemmatized" multiValued="false" indexed="true" stored="true"/>
   <field name="description" type="text_ja" multiValued="false" indexed="true" stored="true"/>
-  <field name="topicID" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="setID" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="category" type="int" multiValued="false" indexed="true" stored="true"/>
-  <field name="basedOpinionId" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="postImageUrl" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="description_tri" type="ja_tri" multiValued="false" indexed="true" stored="true"/>
+  <field name="description_common" type="ja_common" multiValued="false" indexed="true" stored="true"/>
+  <field name="description_lemmatized" type="text_lemmatized" multiValued="false" indexed="true" stored="true"/>
+  <field name="topic_id" type="long" multiValued="false" indexed="true" stored="true"/>
+  <field name="set_id" type="long" multiValued="false" indexed="true" stored="true"/>
+  <field name="category" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="base_opinion_id" type="long" multiValued="false" indexed="true" stored="true"/>
+  <field name="post_image_url" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="link" type="string" multiValued="false" indexed="true" stored="true"/>
+  <copyField source="topic" dest="topic_tri"/>
+  <copyField source="topic" dest="topic_common"/>
+  <copyField source="topic" dest="topic_lemmatized"/>
+  <copyField source="description" dest="description_tri"/>
+  <copyField source="description" dest="description_common"/>
+  <copyField source="description" dest="description_lemmatized"/>
+  <copyField source="caption" dest="caption_tri"/>
+  <copyField source="caption" dest="caption_common"/>
+  <copyField source="caption" dest="caption_lemmatized"/>
 </schema>

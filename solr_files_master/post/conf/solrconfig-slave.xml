@@ -131,6 +131,46 @@
     </lst>
   </requestHandler>
 
+  <requestHandler name="/search" class="solr.SearchHandler" default="true">
+      <lst name="defaults">
+          <str name="echoParams">explicit</str>
+          <str name="defType">edismax</str>
+          <str name="indent">on</str>
+          <str name="wt">json</str>
+          <str name="q.op">AND</str>
+          <str name="q.alt">*:*</str>
+          <str name="rows">20</str>
+          <str name="qf">
+              topic^5.0
+              description^3.0
+              caption^3.0
+              <!-- topic_tri^1.0
+              description_tri^1.0
+              caption_tri^1.0 -->
+          </str>
+      </lst>
+  </requestHandler>
+
+  <requestHandler name="/search2" class="solr.SearchHandler" default="true">
+      <lst name="defaults">
+          <str name="echoParams">explicit</str>
+          <str name="defType">edismax</str>
+          <str name="indent">on</str>
+          <str name="wt">json</str>
+          <str name="q.op">AND</str>
+          <str name="q.alt">*:*</str>
+          <str name="rows">20</str>
+          <str name="qf">
+              topic^5.0
+              description^3.0
+              caption^3.0
+              topic_tri^1.0
+              description_tri^1.0
+              caption_tri^1.0
+          </str>
+      </lst>
+  </requestHandler>
+
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
     <lst name="defaults">
